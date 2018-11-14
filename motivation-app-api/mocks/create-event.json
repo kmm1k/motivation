@@ -1,8 +1,8 @@
 {
-  "body": "{\"content\":\"hello world\"}",
+  "body": "{\"content\":\"hello world\", \"subGoals\": \"[{'id': '1', 'title': 'do stuff'}]\" }",
   "requestContext": {
     "identity": {
-      "cognitoIdentityId": "USER-SUB-1234"
+      "cognitoIdentityId": "USER-SUB-1235"
     }
   }
 }
