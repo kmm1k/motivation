@@ -1,0 +1,116 @@
+how would the data model look like:
+
+#MAIN GOAL#
+String id
+String title
+DateTime goal_start_time
+DateTime goal_end_time
+DateTime actual_end time
+String status (PROGRESS, DONE, ARCHIVED)
+List sub_goals
+
+#SUB GOAL#
+String id
+String title
+DateTime goal_start_time
+DateTime goal_end_time
+DateTime actual_end_time
+String kpi
+String status (PROGRESS, DONE, ARCHIVED)
+List high_impact_base_actions
+
+
+// this is a task base model, that we generate a repeatable out of.
+// action that we want to be done once a day or once per week
+#HIGH IMPACT ACTION BASE#
+String id
+String title
+DateTime action_start_time
+Int repeated_in_days // this might be converted to seconds, so we can do hourly actions in the future
+String status (PROGRESS, DONE, ARCHIVED)
+List high_impact_actions
+
+// this is the actual action that has been done
+// title is copied from base model
+// this object is created only when HIA is completed
+#HIGH IMPACT ACTION#
+String id
+String title
+DateTime completed_time
+
+#USER#
+String id
+String nickname
+String email
+String password
+List main_goals
+
+
+functions that I need:
+
+### Question 1, how do I share Progress object when using serverless ###
+# Maybe if I combine these 2 functions, then I don't need this Progress Class in 2 services
+
+calculate how far am I with the main goal
+	how many sub goals are there and how many have been DONE
+	
+	// I would add this int to the parameter of MAIN GOAL
+	Progress mainGoalProgress(List subGoals) {
+		progress = new Progress()
+		progress.endGoal = subGoals.length
+		progress.currentProgress = subGoals.filter(goal => goal.getStatus() === DONE).count()
+		return progress
+	}
+	
+	// I would add this int to the parameter of SUB GOAL
+	Progress subGoalProgress(List<Actions> actions, Int repeated_in_days, DateTime action_start_time, DateTime goal_end_time) {
+		duration = daysBetween(action_start_time, goal_end_time)
+		progress = new Progress()
+		progress.endGoal = duration/repeated_in_days
+		progress.currentProgress = actions.length
+		return progress
+	}
+	
+	Int daysBetween(DateTime action_start_time, DateTime goal_end_time) {
+		return goal_end_time.toDays() - action_start_time.toDays() 
+	}
+	
+I want to be reminded in the morning of the action that I have to take on that day
+	Boolean actionForToday(Int repeated_in_days, DateTime action_start_time, DateTime goal_end_time) {
+		duration = daysBetween(action_start_time, goal_end_time)
+		return duration % repeated_in_days === 0;	
+	}
+	
+
+#####MVP:#####
+It should be a one page application, with modals when insterting new data, because pages are slow.
+All UI/UX decisions have to be proven by data or by real users, and stay in the guidlines 
+If a person fails to do the ACTIVITY, then we should make it smaller for the person and strech out the SUB GOAL //This should be optional, asking if you want to make it easier
+#USER STORIES#
+I want to see main goal and how far I am with it, when is the deadline, when did I start, what's the progress, here the title is the KPI
+	1) serverless functions for getting the goal
+I want to see sub goals and how far am I with them, when's the deadline, when did I start, what's the progress, what's the KPI I need to reach
+I want to see actions that I have to take per time period
+I want to mark actions done If I have done them
+I want to mark sub goal done, If I have reached the KPI
+I want to be asked If I want set a new sub goal when I reach the KPI, or have done all the actions, just edit the KPI
+I want to be reminded in the morning of the action that I have to take on that day
+I want to be reminded in the evening to mark up if I did that action that day
+I want to be happy about my achievements, there has to be a prize in the end for every completed task
+I want to log in so that other people could use this as a service as well
+I want to log in with facebook, so lazy people could use this as a service as well
+
+#Pivot ideas or other use cases:#
+take a textbook and parse the chapter headers in, every header is a SUB GOAL and you set how fast do you want to get this book done, then you get ACTIVITIES on how much do you have to read daily.
+make this app so an admin or a teacher can set up new tasks for a person to do daily. So it would become a Strategy fullfillment app
+make many strategy fullfillment apps with content and flood the Android market (for example some excercising app, that tells you to do 20 pushups a day and 21 the next day) there would be like default MAIN GOALS, SUB GOALS and ACTIVITIES
+	
+
+
+get MainGoal info by main goal id
+get all MainGoals by userId
+get all subGoals by MainGoal id
+get all HIA by subGoal id
+
+	
+	
