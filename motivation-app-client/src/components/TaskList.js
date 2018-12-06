@@ -17,8 +17,9 @@ export default class TaskList extends Component {
     }
 
     handleSelect(goalId) {
-        this.props.selectMainGoal(goalId)
+        this.props.selectGoal(goalId)
     }
+
 
 
     renderGoalsList() {
@@ -46,10 +47,9 @@ export default class TaskList extends Component {
                      <Glyphicon glyph="refresh" className="spinning" />
                 </ListGroupItem>}
                 {this.renderGoalsList()}
-                <AddModal name="Add Main goal"
-                          mainGoal={this.props.mainGoal}
+                <AddModal name={this.props.name}
+                          activeMainGoal={this.props.activeMainGoal}
                           addGoal={this.props.addGoal}
-                          updateGoal={this.props.updateGoal}
                           button={this.props.button}
                 />
             </ListGroup>
