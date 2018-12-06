@@ -3,7 +3,6 @@ import React, {Component} from "react";
 import {FormGroup, FormControl} from "react-bootstrap";
 import LoaderButton from "./LoaderButton";
 import SubGoal from "../models/SubGoal";
-import Communicator from "../api/communicator"
 
 export default class AddModal extends Component {
 
@@ -12,7 +11,6 @@ export default class AddModal extends Component {
 
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.api = new Communicator();
 
         this.state = {
             show: false,
@@ -47,53 +45,14 @@ export default class AddModal extends Component {
         this.setState({isLoading: true});
 
         try {
-            await this.createOrUpdateMainGoal();
+            await this.props.addGoal(new SubGoal(this.state.content));
+            this.setState({isLoading: false});
+            this.handleClose()
         } catch (e) {
             alert(e);
             this.setState({isLoading: false});
+            this.handleClose()
         }
-    }
-
-
-    async createOrUpdateMainGoal() {
-        if (this.props.activeMainGoal !== undefined) {
-            let mainGoal
-            if (this.props.activeSubGoal !== undefined) {
-                mainGoal = this.addHIAToSubGoal();
-            } else {
-                mainGoal = this.addSubGoalToMainGoal();
-            }
-            await this.updateMainGoal(mainGoal);
-        } else {
-            await this.createMainGoal();
-        }
-        this.handleClose();
-    }
-
-    async updateMainGoal(mainGoal) {
-        await this.api.updateMainGoal(mainGoal)
-            .then(res => {
-                this.props.addGoal(res);
-            });
-    }
-
-    addSubGoalToMainGoal() {
-        let mainGoal = this.props.activeMainGoal;
-        mainGoal.subGoals.push(new SubGoal(this.state.content))
-        return mainGoal;
-    }
-
-    addHIAToSubGoal() {
-        let mainGoal = this.props.activeMainGoal.;
-        mainGoal.subGoals.push(new SubGoal(this.state.content))
-        return mainGoal;
-    }
-
-    async createMainGoal() {
-        await this.api.createMainGoal(new SubGoal(this.state.content))
-            .then(res => {
-                this.props.addGoal(res);
-            })
     }
 
     render() {

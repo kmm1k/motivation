@@ -5,22 +5,17 @@ import TaskList from "../components/TaskList";
 import HIAList from "../components/HIAList";
 import Communicator from "../api/communicator"
 
-
-
 export default class Main extends Component {
 
     constructor(props) {
         super(props);
         this.api = new Communicator();
 
-
         this.state = {
             isLoading: null,
             goals: [],
-            subGoals: [],
-            activities: [],
-            activeMainGoal: {},
-            activeSubGoal: {}
+            activeMainGoal: {subGoals: [], content: ""},
+            activeSubGoal: {subGoals: [], content: ""}
         };
     }
 
@@ -39,28 +34,46 @@ export default class Main extends Component {
     selectMainGoal(goalId) {
         let mainGoal = this.state.goals.find(value => value.goalId === goalId);
         this.setState({activeMainGoal: mainGoal});
-        this.setState({subGoals: mainGoal.subGoals})
+        this.setState({activeSubGoal: {subGoals: [], content: ""}});
     }
 
     selectSubGoal(goalId) {
-        let subGoal = this.state.subGoals.find(value => value.goalId === goalId);
+        let subGoal = this.state.activeMainGoal.subGoals.find(value => value.goalId === goalId);
         this.setState({activeSubGoal: subGoal});
-        this.setState({activities: subGoal.activities})
     }
 
-    addGoal(goal) {
+    async addGoal(goal) {
         let goals = this.state.goals;
         goals.push(goal)
         this.setState({goals});
+        await this.api.createMainGoal(goal)
     }
 
-    updateGoal(goal) {
-        let goals = this.state.goals;
-        const indexOfItemInArray = goals.findIndex(q => q.goalId === goal.goalId);
-        if (indexOfItemInArray > -1) {
-            goals[indexOfItemInArray] = goal;
-        }
+    async addSubGoal(goal) {
+        let activeMainGoal = this.state.activeMainGoal;
+        activeMainGoal.subGoals.push(goal)
+        let goals = this.replace(this.state.goals, activeMainGoal)
         this.setState({goals});
+        await this.api.updateMainGoal(activeMainGoal)
+    }
+
+    async addHIA(activeHIA) {
+        let activeMainGoal = this.state.activeMainGoal;
+        let activeSubGoal = this.state.activeSubGoal;
+        activeSubGoal.subGoals.push(activeHIA);
+        activeMainGoal = this.replace(activeMainGoal.subGoals, activeSubGoal);
+        let goals = this.replace(this.state.goals, activeMainGoal);
+        this.setState({goals});
+        await this.api.updateMainGoal(activeMainGoal)
+    }
+
+
+    replace(goalList, subElement) {
+        const indexOfItemInArray = goalList.findIndex(q => q.goalId === subElement.goalId);
+        if (indexOfItemInArray > -1) {
+            goalList[indexOfItemInArray] = subElement;
+        }
+        return goalList;
     }
 
     render() {
@@ -69,30 +82,30 @@ export default class Main extends Component {
                 <Grid>
                     <Row className="show-grid">
                         <Col sm={12} md={4}>
-                            <TaskList goals={this.state.goals}
-                                      addGoal={this.addGoal.bind(this)}
-                                      isLoading={this.state.isLoading}
+                            <TaskList
+                                isLoading={this.state.isLoading}
+                                goals={this.state.goals}
                                       selectGoal={this.selectMainGoal.bind(this)}
                                       name="Main goals"
                                       button="Add main goal"
+                                      addGoal={this.addGoal.bind(this)}
                             />
                         </Col>
                         <Col sm={12} md={4}>
-                            <TaskList goals={this.state.subGoals}
+                            <TaskList
+                                goals={this.state.activeMainGoal.subGoals}
                                       selectGoal={this.selectSubGoal.bind(this)}
                                       name="Sub goals"
                                       button="Add sub goal"
-                                      activeMainGoal={this.state.activeMainGoal}
-                                      addGoal={this.updateGoal.bind(this)}
+                                      addGoal={this.addSubGoal.bind(this)}
                             />
                         </Col>
                         <Col sm={12} md={4}>
                             <HIAList
-                                goals={this.state.activities}
-                                addGoal={this.updateGoal.bind(this)}
-                                activeSubGoal={this.state.activeSubGoal}
+                                goals={this.state.activeSubGoal.subGoals}
                                 name="High impact activities"
                                 button="Add HIA"
+                                addGoal={this.addHIA.bind(this)}
                             />
                         </Col>
                     </Row>
