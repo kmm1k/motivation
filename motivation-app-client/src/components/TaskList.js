@@ -10,6 +10,10 @@ export default class TaskList extends Component {
         this.props.selectGoal(goalId)
     }
 
+    handleDelete(goalId) {
+        this.props.deleteGoal(goalId)
+    }
+
 
     renderGoalsList() {
         return [{}].concat(this.props.goals).map(
@@ -18,7 +22,8 @@ export default class TaskList extends Component {
                     return (
                         <ListGroupItem header={goal.content.trim().split('\n')[0]}
                                        onClick={() => this.handleSelect(goal.goalId)}>
-                            <ProgressBar bsStyle="success" now={40}/>
+                            <ProgressBar className={`progressBar`} bsStyle="success" now={40}/>
+                            <Glyphicon glyph="remove" className={`removeButton`} onClick={() => this.handleDelete(goal.goalId)}/>
                         </ListGroupItem>
                     )
                 }

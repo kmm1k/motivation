@@ -42,19 +42,30 @@ export default class Main extends Component {
         this.setState({activeSubGoal: subGoal});
     }
 
+    async deleteMainGoal(goalId) {
+        await this.api.deleteMainGoal(goalId)
+        if (goalId === this.state.activeMainGoal.goalId) {
+            this.setState({activeMainGoal: {subGoals: [], content: ""}});
+        }
+    }
+
+    deleteSubGoal(goalId) {
+
+    }
+
     async addGoal(goal) {
         let goals = this.state.goals;
         goals.push(goal)
-        this.setState({goals});
         await this.api.createMainGoal(goal)
+        this.setState({goals});
     }
 
     async addSubGoal(goal) {
         let activeMainGoal = this.state.activeMainGoal;
         activeMainGoal.subGoals.push(goal)
         let goals = this.replace(this.state.goals, activeMainGoal)
-        this.setState({goals});
         await this.api.updateMainGoal(activeMainGoal)
+        this.setState({goals});
     }
 
     async addHIA(activeHIA) {
@@ -63,8 +74,8 @@ export default class Main extends Component {
         activeSubGoal.subGoals.push(activeHIA);
         activeMainGoal = this.replace(activeMainGoal.subGoals, activeSubGoal);
         let goals = this.replace(this.state.goals, activeMainGoal);
-        this.setState({goals});
         await this.api.updateMainGoal(activeMainGoal)
+        this.setState({goals});
     }
 
 
@@ -86,6 +97,7 @@ export default class Main extends Component {
                                 isLoading={this.state.isLoading}
                                 goals={this.state.goals}
                                       selectGoal={this.selectMainGoal.bind(this)}
+                                    deleteGoal={this.deleteMainGoal.bind(this)}
                                       name="Main goals"
                                       button="Add main goal"
                                       addGoal={this.addGoal.bind(this)}
@@ -95,7 +107,8 @@ export default class Main extends Component {
                             <TaskList
                                 goals={this.state.activeMainGoal.subGoals}
                                       selectGoal={this.selectSubGoal.bind(this)}
-                                      name="Sub goals"
+                                deleteGoal={this.deleteSubGoal.bind(this)}
+                                name="Sub goals"
                                       button="Add sub goal"
                                       addGoal={this.addSubGoal.bind(this)}
                             />

@@ -21,4 +21,8 @@ export default class Communicator extends Component {
         return API.get("motivation", "/motivation", {});
     }
 
+    async deleteMainGoal(goal) {
+        return API.del("motivation", `/motivation/${goal.goalId}`, {})
+    }
+
 }

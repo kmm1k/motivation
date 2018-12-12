@@ -7,3 +7,17 @@
     from { transform: scale(1) rotate(0deg); }
     to { transform: scale(1) rotate(360deg); }
 }
+
+.removeButton {
+    top:3px;
+    float: right;
+    z-index: 300;
+}
+
+.removeButton:hover {
+    color: red;
+}
+.progressBar {
+    float: left;
+    width: 90%;
+}
