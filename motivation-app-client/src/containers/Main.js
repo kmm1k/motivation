@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import "./Main.css";
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import TaskList from "../components/TaskList";
 import HIAList from "../components/HIAList";
 import Communicator from "../api/communicator"
@@ -111,7 +111,7 @@ export default class Main extends Component {
     render() {
         return (
             <div>
-                <Grid>
+
                     <Row className="show-grid">
                         <Col sm={12} md={4}>
                             <TaskList
@@ -122,6 +122,7 @@ export default class Main extends Component {
                                 name="Main goals"
                                 button="Add main goal"
                                 addGoal={this.addGoal.bind(this)}
+                                timePeriod="month"
                             />
                         </Col>
                         <Col sm={12} md={4}>
@@ -132,6 +133,7 @@ export default class Main extends Component {
                                 name="Sub goals"
                                 button="Add sub goal"
                                 addGoal={this.addSubGoal.bind(this)}
+                                timePeriod="week"
                             />
                         </Col>
                         <Col sm={12} md={4}>
@@ -140,10 +142,11 @@ export default class Main extends Component {
                                 name="High impact activities"
                                 button="Add HIA"
                                 addGoal={this.addHIA.bind(this)}
+                                timePeriod="day"
                             />
                         </Col>
                     </Row>
-                </Grid>
+
 
             </div>
         );

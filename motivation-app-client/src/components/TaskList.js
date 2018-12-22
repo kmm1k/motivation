@@ -1,7 +1,9 @@
 import {ListGroup, ListGroupItem, ProgressBar, Glyphicon} from "react-bootstrap";
 import React, {Component} from "react";
 import AddModal from "./AddModal";
+import moment from "moment";
 import "./TaskList.css";
+
 
 
 export default class TaskList extends Component {
@@ -24,6 +26,7 @@ export default class TaskList extends Component {
                                        onClick={() => this.handleSelect(goal.goalId)}>
                             <ProgressBar className={`progressBar`} bsStyle="success" now={40}/>
                             <Glyphicon glyph="remove" className={`removeButton`} onClick={() => this.handleDelete(goal.goalId)}/>
+                            <p>Started: {moment.utc(goal.createdAt).local().format('DD.MM.YYYY')}</p>
                         </ListGroupItem>
                     )
                 }
@@ -46,6 +49,7 @@ export default class TaskList extends Component {
                     addGoal={this.props.addGoal}
                     name={this.props.name}
                     button={this.props.button}
+                    timePeriod={this.props.timePeriod}
                 />
             </ListGroup>
         );

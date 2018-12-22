@@ -35,6 +35,7 @@ export default class HIAList extends Component {
                     addGoal={this.props.addGoal}
                     name={this.props.name}
                     button={this.props.button}
+                    timePeriod={this.props.timePeriod}
                 />
             </ListGroup>
         )

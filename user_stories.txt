@@ -83,12 +83,12 @@ I want to be reminded in the morning of the action that I have to take on that d
 	
 
 #####MVP:#####
-It should be a one page application, with modals when insterting new data, because pages are slow.
-All UI/UX decisions have to be proven by data or by real users, and stay in the guidlines 
+It should be a one page application, with modals when inserting new data, because pages are slow.
+All UI/UX decisions have to be proven by data or by real users, and stay in the guidelines
 If a person fails to do the ACTIVITY, then we should make it smaller for the person and strech out the SUB GOAL //This should be optional, asking if you want to make it easier
 #USER STORIES#
 I want to see main goal and how far I am with it, when is the deadline, when did I start, what's the progress, here the title is the KPI
-	1) serverless functions for getting the goal
+	1) Serverless functions for getting the goal
 I want to see sub goals and how far am I with them, when's the deadline, when did I start, what's the progress, what's the KPI I need to reach
 I want to see actions that I have to take per time period
 I want to mark actions done If I have done them
@@ -103,7 +103,7 @@ I want to log in with facebook, so lazy people could use this as a service as we
 #Pivot ideas or other use cases:#
 take a textbook and parse the chapter headers in, every header is a SUB GOAL and you set how fast do you want to get this book done, then you get ACTIVITIES on how much do you have to read daily.
 make this app so an admin or a teacher can set up new tasks for a person to do daily. So it would become a Strategy fullfillment app
-make many strategy fullfillment apps with content and flood the Android market (for example some excercising app, that tells you to do 20 pushups a day and 21 the next day) there would be like default MAIN GOALS, SUB GOALS and ACTIVITIES
+make many strategy fulfillment apps with content and flood the Android market (for example some exercising app, that tells you to do 20 pushups a day and 21 the next day) there would be like default MAIN GOALS, SUB GOALS and ACTIVITIES
 	
 
 

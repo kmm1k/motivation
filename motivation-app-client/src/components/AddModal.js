@@ -15,7 +15,8 @@ export default class AddModal extends Component {
         this.state = {
             show: false,
             isLoading: null,
-            content: ""
+            content: "",
+            timePeriod: 1
         };
     }
 
@@ -26,6 +27,7 @@ export default class AddModal extends Component {
     handleClose() {
         this.setState({isLoading: false});
         this.setState({content: ""});
+        this.setState({timePeriod: 1});
         this.setState({show: false});
     }
 
@@ -45,7 +47,7 @@ export default class AddModal extends Component {
         this.setState({isLoading: true});
 
         try {
-            await this.props.addGoal(new SubGoal(this.state.content));
+            await this.props.addGoal(new SubGoal(this.state.content, this.state.timePeriod));
             this.setState({isLoading: false});
             this.handleClose()
         } catch (e) {
@@ -71,7 +73,18 @@ export default class AddModal extends Component {
                                 <FormControl
                                     onChange={this.handleChange}
                                     value={this.state.content}
+                                    placeholder={"KPI"}
                                 />
+                            </FormGroup>
+                            <FormGroup controlId="timePeriod">
+                                <FormControl componentClass="select" >
+                                    <option value="1">One {this.props.timePeriod}</option>
+                                    <option value="2">Two {this.props.timePeriod}s</option>
+                                    <option value="3">Three {this.props.timePeriod}s</option>
+                                    <option value="4">Four {this.props.timePeriod}s</option>
+                                    <option value="5">Five {this.props.timePeriod}s</option>
+                                    <option value="6">Six {this.props.timePeriod}s</option>
+                                </FormControl>
                             </FormGroup>
                             <LoaderButton
                                 block

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "aws-amplify": "^1.1.10",
+    "moment": "^2.23.0",
     "node-uuid": "^1.4.8",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
