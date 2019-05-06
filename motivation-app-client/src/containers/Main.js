@@ -46,39 +46,36 @@ export default class Main extends Component {
         this.setState({isLoading: true})
         await this.api.deleteMainGoal(goalId)
         if (goalId === this.state.activeMainGoal.goalId) {
-            this.setState({activeMainGoal: {subGoals: [], content: ""}});
+            await this.setState({activeMainGoal: {subGoals: [], content: ""}});
+            await this.setState({activeSubGoal: {subGoals: [], content: ""}});
         }
-        let goals = this.delete(this.state.goals, goalId)
+        let goals = await this.delete(this.state.goals, goalId)
         this.setState({goals: goals})
         this.setState({isLoading: false})
     }
 
     async deleteSubGoal(goalId) {
         this.setState({isLoading: true})
-        let activeMainGoal = this.state.activeMainGoal;
-        let subGoals = this.delete(activeMainGoal.subGoals, goalId)
-        activeMainGoal.subGoals = subGoals
+        let activeMainGoal = this.state.activeMainGoal
+        await this.setState({activeSubGoal: {subGoals: [], content: ""}});
+        activeMainGoal.subGoals = await this.delete(activeMainGoal.subGoals, goalId)
         await this.api.updateMainGoal(activeMainGoal)
-        if (goalId === this.state.activeSubGoal.goalId) {
-            this.setState({activeSubGoal: {subGoals: [], content: ""}});
-        }
-        let goals = this.replace(this.state.goals, activeMainGoal)
-        this.setState({activeMainGoal: activeMainGoal})
-        this.setState({goals: goals})
+        let goals = await this.replace(this.state.goals, activeMainGoal)
+        await this.setState({goals});
         this.setState({isLoading: false})
     }
 
     async addGoal(goal) {
         let goals = this.state.goals;
-        goals.push(goal)
-        await this.api.createMainGoal(goal)
+        let newGoal = await this.api.createMainGoal(goal)
+        goals.push(newGoal)
         this.setState({goals});
     }
 
     async addSubGoal(goal) {
         let activeMainGoal = this.state.activeMainGoal;
         activeMainGoal.subGoals.push(goal)
-        let goals = this.replace(this.state.goals, activeMainGoal)
+        let goals = await this.replace(this.state.goals, activeMainGoal)
         await this.api.updateMainGoal(activeMainGoal)
         this.setState({goals});
     }
@@ -87,14 +84,26 @@ export default class Main extends Component {
         let activeMainGoal = this.state.activeMainGoal;
         let activeSubGoal = this.state.activeSubGoal;
         activeSubGoal.subGoals.push(activeHIA);
-        activeMainGoal = this.replace(activeMainGoal.subGoals, activeSubGoal);
-        let goals = this.replace(this.state.goals, activeMainGoal);
+        activeMainGoal.subGoals = await this.replace(activeMainGoal.subGoals, activeSubGoal);
+        let goals = await this.replace(this.state.goals, activeMainGoal);
         await this.api.updateMainGoal(activeMainGoal)
         this.setState({goals});
     }
 
+    async doneHIA(goalId) {
+        this.setState({isLoading: true})
+        let activeSubGoal = this.state.activeSubGoal
+        activeSubGoal.subGoals = await this.delete(activeSubGoal.subGoals, goalId)
+        let activeMainGoal = this.state.activeMainGoal
+        activeMainGoal.subGoals = await this.replace(activeMainGoal.subGoals, activeSubGoal)
+        await this.api.updateMainGoal(activeMainGoal)
+        let goals = await this.replace(this.state.goals, activeMainGoal)
+        await this.setState({goals});
+        this.setState({isLoading: false})
+    }
 
-    replace(goalList, subElement) {
+
+    async replace(goalList, subElement) {
         const indexOfItemInArray = goalList.findIndex(q => q.goalId === subElement.goalId);
         if (indexOfItemInArray > -1) {
             goalList[indexOfItemInArray] = subElement;
@@ -102,7 +111,7 @@ export default class Main extends Component {
         return goalList;
     }
 
-    delete(goalList, goalId) {
+    async delete(goalList, goalId) {
         const indexOfItemInArray = goalList.findIndex(q => q.goalId === goalId);
         goalList.splice(indexOfItemInArray, 1);
         return goalList;
@@ -142,6 +151,7 @@ export default class Main extends Component {
                                 name="High impact activities"
                                 button="Add HIA"
                                 addGoal={this.addHIA.bind(this)}
+                                doneHIA={this.doneHIA.bind(this)}
                                 timePeriod="day"
                             />
                         </Col>

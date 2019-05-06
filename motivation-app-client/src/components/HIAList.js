@@ -4,8 +4,8 @@ import React, {Component} from "react";
 
 export default class HIAList extends Component {
 
-    handleDone() {
-
+    handleDone(goalId) {
+        this.props.doneHIA(goalId)
     }
 
     renderHIAList() {
@@ -14,7 +14,7 @@ export default class HIAList extends Component {
                 if (i !== 0) {
                     return (
                         <ListGroupItem header={goal.content.trim().split('\n')[0]}>
-                            <Button bsStyle="success" bsSize="large" block onClick={this.handleDone()}>
+                            <Button bsStyle="success" bsSize="large" block onClick={() => this.handleDone(goal.goalId)}>
                                 <Glyphicon glyph="ok"/> Done
                             </Button>
                         </ListGroupItem>
