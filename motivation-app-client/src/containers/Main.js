@@ -25,7 +25,7 @@ export default class Main extends Component {
             const goals = await this.api.getGoals();
             this.setState({goals});
         } catch (e) {
-            alert(e);
+            this.props.history.push("/home");
         }
 
         this.setState({isLoading: false});
@@ -70,6 +70,22 @@ export default class Main extends Component {
         let newGoal = await this.api.createMainGoal(goal)
         goals.push(newGoal)
         this.setState({goals});
+    }
+
+    async editMainGoal(goal) {
+        this.setState({isLoading: true})
+        await this.api.updateMainGoal(goal)
+        await this.replace(this.state.goals, goal)
+        this.setState({isLoading: false})
+    }
+
+    async editSubGoal(goal) {
+        this.setState({isLoading: true})
+        let activeMainGoal = this.state.activeMainGoal;
+        await this.replace(activeMainGoal.subGoals, goal)
+        await this.replace(this.state.goals, activeMainGoal)
+        await this.api.updateMainGoal(activeMainGoal)
+        this.setState({isLoading: false})
     }
 
     async addSubGoal(goal) {
@@ -131,6 +147,7 @@ export default class Main extends Component {
                                 name="Main goals"
                                 button="Add main goal"
                                 addGoal={this.addGoal.bind(this)}
+                                editGoal={this.editMainGoal.bind(this)}
                                 timePeriod="month"
                             />
                         </Col>
@@ -142,6 +159,7 @@ export default class Main extends Component {
                                 name="Sub goals"
                                 button="Add sub goal"
                                 addGoal={this.addSubGoal.bind(this)}
+                                editGoal={this.editSubGoal.bind(this)}
                                 timePeriod="week"
                             />
                         </Col>

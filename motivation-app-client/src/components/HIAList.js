@@ -1,6 +1,8 @@
 import {Button, Glyphicon, ListGroup, ListGroupItem} from "react-bootstrap";
 import AddModal from "./AddModal";
 import React, {Component} from "react";
+import moment from "moment";
+import "./HIAList.css";
 
 export default class HIAList extends Component {
 
@@ -17,6 +19,10 @@ export default class HIAList extends Component {
                             <Button bsStyle="success" bsSize="large" block onClick={() => this.handleDone(goal.goalId)}>
                                 <Glyphicon glyph="ok"/> Done
                             </Button>
+                            <dl className={"row paddingtop"}>
+                                <dd className={"col-sm-7"}>Started: {moment.utc(goal.createdAt).local().format('DD.MM.YYYY')}</dd>
+                                <dd className={"col-sm-5"}>ETA: {goal.timePeriod} {this.props.timePeriod}</dd>
+                            </dl>
                         </ListGroupItem>
                     )
                 }
@@ -28,7 +34,7 @@ export default class HIAList extends Component {
 
     render() {
         return (
-            <ListGroup>
+            <ListGroup variant="flush">
                 <ListGroupItem header="High Impact Activities"></ListGroupItem>
                 {this.renderHIAList()}
                 <AddModal
