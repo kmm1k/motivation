@@ -3,7 +3,7 @@ import "./Main.css";
 import {Row, Col} from 'react-bootstrap';
 import TaskList from "../components/TaskList";
 import HIAList from "../components/HIAList";
-import Communicator from "../api/communicator"
+import Communicator from "../../api/communicator"
 
 export default class Main extends Component {
 

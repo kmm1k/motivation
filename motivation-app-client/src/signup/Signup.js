@@ -5,7 +5,7 @@ import {
     FormControl,
     ControlLabel
 } from "react-bootstrap";
-import LoaderButton from "../components/LoaderButton";
+import LoaderButton from "../main/components/LoaderButton";
 import "./Signup.css";
 import { Auth } from "aws-amplify";
 

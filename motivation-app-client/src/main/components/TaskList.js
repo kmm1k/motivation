@@ -4,7 +4,7 @@ import AddModal from "./AddModal";
 import EditModal from "./EditModal";
 import moment from "moment";
 import "./TaskList.css";
-import SubGoal from "../models/SubGoal.js";
+import SubGoal from "../../models/SubGoal.js";
 
 export default class TaskList extends Component {
 

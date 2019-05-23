@@ -2,7 +2,7 @@ import {Button, Glyphicon, ListGroupItem, Modal} from "react-bootstrap";
 import React, {Component} from "react";
 import {FormGroup, FormControl} from "react-bootstrap";
 import LoaderButton from "./LoaderButton";
-import SubGoal from "../models/SubGoal";
+import SubGoal from "../../models/SubGoal";
 
 export default class AddModal extends Component {
 
